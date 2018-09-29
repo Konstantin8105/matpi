@@ -36,3 +36,15 @@ func TestConvert(t *testing.T) {
 		t.Fatal("Pictures is not same")
 	}
 }
+
+func TestConvertFail(t *testing.T) {
+	m := mat.NewDense(100, 80, nil)
+	for i := 0; i < 80; i++ {
+		m.Set(i, i, 1.0)
+	}
+	err := Convert(m, "/////")
+	if err == nil {
+		t.Fatal("Error is empty")
+	}
+
+}
