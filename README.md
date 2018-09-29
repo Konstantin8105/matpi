@@ -4,4 +4,21 @@
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 
 # matpi
-Convert matrix to picture
+
+Convert matrix from `gonum.mat.Matrix` to JPEG picture.
+
+Example:
+
+```golang
+	m := mat.NewDense(100, 80, nil)
+	for i := 0; i < 80; i++ {
+		m.Set(i, i, 1.0)
+	}
+
+	err := Convert(m, "result.jpg")
+	if err != nil {
+		return
+	}
+```
+
+![Diagonal](https://raw.githubusercontent.com/Konstantin8105/matpi/master/testdata/diagonal_expect.jpg)
