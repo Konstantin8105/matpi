@@ -6,6 +6,7 @@
 # matpi
 
 Convert matrix from `gonum.mat.Matrix` to JPEG picture.
+Non-zero matrix element is black.
 
 Example:
 

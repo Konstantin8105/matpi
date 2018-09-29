@@ -11,6 +11,7 @@ import (
 )
 
 // Convert matrix 'gonum.mat.Matrix' to JPEG picture file with filename.
+// Non-zero matrix element is black.
 func Convert(m mat.Matrix, filename string) (err error) {
 	r, c := m.Dims()
 
