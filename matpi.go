@@ -32,5 +32,5 @@ func Convert(m mat.Matrix, filename string) (err error) {
 	}
 	defer func() { _ = file.Close() }()
 
-	return jpeg.Encode(file, img, &jpeg.Options{80})
+	return jpeg.Encode(file, img, &jpeg.Options{Quality: 80})
 }
