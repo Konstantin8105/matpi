@@ -11,9 +11,9 @@ import (
 )
 
 var (
-    positiveColor = color.RGBA{0, 100, 0, 0xff}
-    negativeColor = color.RGBA{0, 0, 100, 0xff}
-    zeroColor     = color.RGBA{255, 250, 205, 0xff}
+	positiveColor = color.RGBA{0, 100, 0, 0xff}
+	negativeColor = color.RGBA{80, 80, 200, 0xff}
+	zeroColor     = color.RGBA{255, 250, 205, 0xff}
 )
 
 // Convert matrix 'gonum.mat.Matrix' to JPEG picture file with filename.
