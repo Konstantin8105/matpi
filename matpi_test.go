@@ -48,3 +48,15 @@ func TestConvertFail(t *testing.T) {
 	}
 
 }
+
+func ExampleConvert() {
+	m := mat.NewDense(100, 80, nil)
+	for i := 0; i < 80; i++ {
+		m.Set(i, i, 1.0)
+	}
+
+	err := Convert(m, "result.jpg")
+	if err != nil {
+		return
+	}
+}
