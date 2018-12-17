@@ -3,7 +3,7 @@ package matpi
 import (
 	"image"
 	"image/color"
-	"image/jpeg"
+	"image/png"
 	"math"
 	"os"
 
@@ -45,5 +45,5 @@ func Convert(m mat.Matrix, filename string) (err error) {
 	}
 	defer func() { _ = file.Close() }()
 
-	return jpeg.Encode(file, img, &jpeg.Options{Quality: 80})
+	return png.Encode(file, img)
 }
