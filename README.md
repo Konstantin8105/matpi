@@ -5,7 +5,7 @@
 
 # matpi
 
-Convert matrix from `gonum.mat.Matrix` to JPEG picture.
+Convert matrix from `gonum.mat.Matrix` to PNG picture.
 Non-zero matrix element is black.
 
 Example:
@@ -16,10 +16,12 @@ Example:
 		m.Set(i, i, 1.0)
 	}
 
-	err := Convert(m, "result.jpg")
+	err := Convert(m, "result.png")
 	if err != nil {
 		return
 	}
 ```
 
-![Diagonal](https://raw.githubusercontent.com/Konstantin8105/matpi/master/testdata/diagonal_expect.jpg)
+![Diagonal](https://raw.githubusercontent.com/Konstantin8105/matpi/master/testdata/diagonal_expect.png)
+
+![Big symmetrical matrix](https://raw.githubusercontent.com/Konstantin8105/matpi/master/testdata/big.png)
