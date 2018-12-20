@@ -1,4 +1,4 @@
-package matpi
+package matpi_test
 
 import (
 	"bytes"
@@ -8,6 +8,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/Konstantin8105/matpi"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -35,7 +36,7 @@ func TestConvert(t *testing.T) {
 	act := "testdata/diagonal.png"
 	exp := "testdata/diagonal_expect.png"
 
-	err := Convert(m, act)
+	err := matpi.Convert(m, act, matpi.DefaultConfig())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -60,7 +61,7 @@ func TestConvert2(t *testing.T) {
 	act := "testdata/diagonal2.png"
 	exp := "testdata/diagonal2_expect.png"
 
-	err := Convert(m, act)
+	err := matpi.Convert(m, act, matpi.DefaultConfig())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -79,7 +80,7 @@ func TestConvertFail(t *testing.T) {
 	for i := 0; i < 80; i++ {
 		m.Set(i, i, 1.0)
 	}
-	err := Convert(m, "/////")
+	err := matpi.Convert(m, "/////", matpi.DefaultConfig())
 	if err == nil {
 		t.Fatal("Error is empty")
 	}
@@ -93,9 +94,9 @@ func ExampleConvert() {
 		m.Set(i, 79-i, -1.0)
 	}
 
-	err := Convert(m, "result.png")
+	err := matpi.Convert(m, "result.png", matpi.DefaultConfig())
 	if err != nil {
-		return
+		panic(err)
 	}
 }
 
@@ -108,11 +109,12 @@ func TestTriplets(t *testing.T) {
 
 	// read entries
 	m := mat.NewDense(204, 204, nil)
+	var n int
 	for {
 		var i, j int
 		var x float64
 
-		n, err := fmt.Fscanf(f, "%d %d %f\n", &i, &j, &x)
+		n, err = fmt.Fscanf(f, "%d %d %f\n", &i, &j, &x)
 		if err == io.EOF {
 			break
 		}
@@ -124,8 +126,31 @@ func TestTriplets(t *testing.T) {
 		}
 		m.Set(i, j, x)
 	}
-	err = Convert(m, "./testdata/big.png")
+	config := matpi.DefaultConfig()
+	config.Scale = 4
+	err = matpi.Convert(m, "./testdata/big.png", config)
 	if err != nil {
 		t.Error(err)
+	}
+}
+
+func TestWrong(t *testing.T) {
+	errs := []error{
+		func() error {
+			err := matpi.Convert(nil, "", matpi.Config{})
+			return err
+		}(),
+		func() error {
+			c := matpi.Config{}
+			c.Scale = -1
+			err := matpi.Convert(nil, "", c)
+			return err
+		}(),
+	}
+
+	for i := range errs {
+		if errs[i] == nil {
+			t.Errorf("not fail for case %d", i)
+		}
 	}
 }
