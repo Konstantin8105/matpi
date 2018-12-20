@@ -36,7 +36,7 @@ func TestConvert(t *testing.T) {
 	act := "testdata/diagonal.png"
 	exp := "testdata/diagonal_expect.png"
 
-	err := matpi.Convert(m, act, matpi.DefaultConfig())
+	err := matpi.Convert(m, act, matpi.NewConfig())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +61,7 @@ func TestConvert2(t *testing.T) {
 	act := "testdata/diagonal2.png"
 	exp := "testdata/diagonal2_expect.png"
 
-	err := matpi.Convert(m, act, matpi.DefaultConfig())
+	err := matpi.Convert(m, act, matpi.NewConfig())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -80,7 +80,7 @@ func TestConvertFail(t *testing.T) {
 	for i := 0; i < 80; i++ {
 		m.Set(i, i, 1.0)
 	}
-	err := matpi.Convert(m, "/////", matpi.DefaultConfig())
+	err := matpi.Convert(m, "/////", matpi.NewConfig())
 	if err == nil {
 		t.Fatal("Error is empty")
 	}
@@ -94,7 +94,7 @@ func ExampleConvert() {
 		m.Set(i, 79-i, -1.0)
 	}
 
-	err := matpi.Convert(m, "result.png", matpi.DefaultConfig())
+	err := matpi.Convert(m, "result.png", matpi.NewConfig())
 	if err != nil {
 		panic(err)
 	}
@@ -126,7 +126,7 @@ func TestTriplets(t *testing.T) {
 		}
 		m.Set(i, j, x)
 	}
-	config := matpi.DefaultConfig()
+	config := matpi.NewConfig()
 	config.Scale = 4
 	err = matpi.Convert(m, "./testdata/big.png", config)
 	if err != nil {
@@ -137,13 +137,17 @@ func TestTriplets(t *testing.T) {
 func TestWrong(t *testing.T) {
 	errs := []error{
 		func() error {
-			err := matpi.Convert(nil, "", matpi.Config{})
+			err := matpi.Convert(nil, "", nil)
+			return err
+		}(),
+		func() error {
+			err := matpi.Convert(nil, "", &matpi.Config{})
 			return err
 		}(),
 		func() error {
 			c := matpi.Config{}
 			c.Scale = -1
-			err := matpi.Convert(nil, "", c)
+			err := matpi.Convert(nil, "", &c)
 			return err
 		}(),
 	}
@@ -152,5 +156,6 @@ func TestWrong(t *testing.T) {
 		if errs[i] == nil {
 			t.Errorf("not fail for case %d", i)
 		}
+		t.Log(errs[i])
 	}
 }

@@ -13,6 +13,10 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+func isEqual(c1, c2 color.RGBA) bool {
+	return c1.R == c2.R && c1.G == c2.G && c1.B == c2.B && c1.A == c2.A
+}
+
 // Config is configuration of matrix picture
 type Config struct {
 	// color of positive value
@@ -28,9 +32,9 @@ type Config struct {
 	Scale int
 }
 
-// DefaultConfig is default configuration
-func DefaultConfig() Config {
-	return Config{
+// NewConfig is default configuration
+func NewConfig() *Config {
+	return &Config{
 		PositiveColor: color.RGBA{255, 0, 0, 0xff},    // RED
 		NegativeColor: color.RGBA{25, 181, 254, 0xff}, // BLUE
 		ZeroColor:     color.RGBA{255, 255, 0, 0xff},  // YELLOW
@@ -40,15 +44,22 @@ func DefaultConfig() Config {
 
 // Convert matrix 'gonum.mat.Matrix' to PNG picture file with filename.
 // Color of picture pixel in according to `config`.
-func Convert(m mat.Matrix, filename string, config Config) error {
+func Convert(m mat.Matrix, filename string, config *Config) error {
 
 	// check input data
 	et := errors.New("check input data")
-	if config.Scale < 0 {
-		_ = et.Add(fmt.Errorf("not acceptable scale less zero: %d", config.Scale))
-	}
-	if config.Scale == 0 {
-		_ = et.Add(fmt.Errorf("not acceptable zero scale"))
+	if config == nil {
+		_ = et.Add(fmt.Errorf("configuration is nil"))
+	} else {
+		if config.Scale < 0 {
+			_ = et.Add(fmt.Errorf("not acceptable scale less zero: %d", config.Scale))
+		}
+		if config.Scale == 0 {
+			_ = et.Add(fmt.Errorf("not acceptable zero scale"))
+		}
+		if isEqual(config.ZeroColor, config.PositiveColor) && isEqual(config.ZeroColor, config.NegativeColor) {
+			_ = et.Add(fmt.Errorf("colors is not ok"))
+		}
 	}
 	if filename == "" {
 		_ = et.Add(fmt.Errorf("filename is empty"))
