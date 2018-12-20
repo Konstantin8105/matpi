@@ -16,7 +16,7 @@ Example:
 		m.Set(i, i, 1.0)
 	}
 
-	err := matpi.Convert(m, "result.png", matpi.DefaultConfig())
+	err := matpi.Convert(m, "result.png", matpi.NewConfig())
 	if err != nil {
 		return
 	}
