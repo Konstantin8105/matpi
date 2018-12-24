@@ -101,36 +101,75 @@ func ExampleConvert() {
 }
 
 func TestTriplets(t *testing.T) {
-	// read file
-	f, err := os.Open("./testdata/1544775921503561857.modal")
-	if err != nil {
-		t.Fatal(err)
+	tcs := []struct {
+		filename    string
+		pngFilename string
+	}{
+		{
+			filename:    "./testdata/lu",
+			pngFilename: "./testdata/lu.png",
+		},
+		{
+			filename:    "./testdata/mass",
+			pngFilename: "./testdata/mass.png",
+		},
+		{
+			filename:    "./testdata/modal",
+			pngFilename: "./testdata/modal.png",
+		},
 	}
 
-	// read entries
-	m := mat.NewDense(204, 204, nil)
-	var n int
-	for {
-		var i, j int
-		var x float64
+	type triplet struct {
+		i, j int
+		x    float64
+	}
 
-		n, err = fmt.Fscanf(f, "%d %d %f\n", &i, &j, &x)
-		if err == io.EOF {
-			break
-		}
-		if n != 3 {
-			t.Fatalf("scan more then 3 variables")
-		}
+	for _, tc := range tcs {
+		// read file
+		f, err := os.Open(tc.filename)
 		if err != nil {
-			t.Fatalf("cannot scan: %v", err)
+			t.Fatal(err)
 		}
-		m.Set(i, j, x)
-	}
-	config := matpi.NewConfig()
-	config.Scale = 4
-	err = matpi.Convert(m, "./testdata/big.png", config)
-	if err != nil {
-		t.Error(err)
+
+		// read entries
+		var n int
+		var tr []triplet
+		for {
+			var i, j int
+			var x float64
+
+			n, err = fmt.Fscanf(f, "%d %d %f\n", &i, &j, &x)
+			if err == io.EOF {
+				break
+			}
+			if n != 3 {
+				t.Fatalf("scan more then 3 variables")
+			}
+			if err != nil {
+				t.Fatalf("cannot scan: %v", err)
+			}
+			tr = append(tr, triplet{i, j, x})
+		}
+		size := 0
+		for i := range tr {
+			if size < tr[i].i {
+				size = tr[i].i
+			}
+			if size < tr[i].j {
+				size = tr[i].j
+			}
+		}
+		size++
+		m := mat.NewDense(size, size, nil)
+		for i := range tr {
+			m.Set(tr[i].i, tr[i].j, tr[i].x)
+		}
+		config := matpi.NewConfig()
+		config.Scale = 3
+		err = matpi.Convert(m, tc.pngFilename, config)
+		if err != nil {
+			t.Error(err)
+		}
 	}
 }
 

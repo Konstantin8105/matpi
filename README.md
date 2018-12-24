@@ -24,4 +24,8 @@ Example:
 
 ![Diagonal](https://raw.githubusercontent.com/Konstantin8105/matpi/master/testdata/diagonal_expect.png)
 
-![Big symmetrical matrix](https://raw.githubusercontent.com/Konstantin8105/matpi/master/testdata/big.png)
+![Symmetrical LU matrix](https://raw.githubusercontent.com/Konstantin8105/matpi/master/testdata/lu.png)
+
+![Mass Matrix](https://raw.githubusercontent.com/Konstantin8105/matpi/master/testdata/mass.png)
+
+![Matrix for modal calculation](https://raw.githubusercontent.com/Konstantin8105/matpi/master/testdata/modal.png)
